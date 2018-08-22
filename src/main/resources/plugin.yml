@@ -1,0 +1,8 @@
+name: Revive
+main: me.xiaox.revive.Revive
+author: [D_xiaox]
+depend: [Vault, ProtocolLib]
+api-version: 1.13
+version: 1.0.0
+commands:
+  re:

@@ -1,0 +1,50 @@
+#前缀 - 语言文本前缀
+prefix: "&b[&cRevive&b] &6> &r"
+#无权限
+nopermission: "%prefix%&c你没有权限使用此命令!"
+#参数错误
+parametererror: "%prefix%&c请仔细检查参数后再输入!"
+#复活点已经启动
+isenable: "%prefix%&c复活点已经是启动状态了!"
+#复活点已经关闭
+noenable: "%prefix%&c复活点已经是关闭状态了!"
+#启动成功
+enablesuccessful: "%prefix%&c启动成功!"
+#关闭成功
+disablesuccessful: "%prefix%&c关闭成功!"
+#已存在
+isexists: "%prefix%&c此重生点已存在!"
+#不存在
+noexists: "%prefix%&c此重生点不存在!"
+#组添加失败
+#: "%prefix%&c组内重生点添加失败!"
+#添加成功
+addsuccessful: "%prefix%&c成功添加重生点!"
+#删除成功
+delsuccessful: "%prefix%&c成功删除重生点!"
+#tp成功
+tpsuccessful: "%prefix%&c成功传送到重生点!"
+#添加/编辑复活点title成功!
+titlesuccessful: "%prefix%&c成功添加/编辑重生点title!"
+#删除复活点title成功!
+deltitlesuccessful: "%prefix%&c成功删除重生点title!"
+#添加复活点title时 title已存在则提示
+hastitle: "%prefix%&c指定复活点的Title已存在要修改请使用edit命令!"
+#编辑复活点title时 title不存在则提示
+notitle: "%prefix%&c指定复活点的Title不存在要添加请使用add命令!"
+#列表为空
+nolist: "%prefix%&c未发现重生点!"
+#输入re help后出现的内容
+help: |
+    &c---[Revive]----
+    &b/re &e- &c显示插件信息
+    &b/re help &e- &c插件帮助界面
+    &b/re [add/set] [name] {group} &e- &c创建一个{group}权限组的重生点,不填则通用
+    &b/re [del/delete/remove] [name] &e- &c删除一个重生点
+    &b/re spawn [all/world] &e- &c创建一个全服/世界的主重生点
+    &b/re list [all/world] &e- &c列出全服/世界全部的重生点
+    &b/re title add [name] [title] [subtitle] &e- &c在一个重生点添加一个Title消息
+    &b/re title edit [name] [title] [subtitle] &e- &c编辑一个重生点的Title消息
+    &b/re title [del/delete/remove] [name] &e- &c删除一个重生点的Title消息
+    &b/re tp [name] &e- &c传送到某个重生点
+    &b/re enable/disable [name] &e- &c启动/关闭某个重生点

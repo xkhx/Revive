@@ -347,6 +347,10 @@ public class Commands implements CommandExecutor {
             }
             //如果输入/re modify
             if (args[0].equalsIgnoreCase("modify")) {
+                if (!sender.hasPermission("revive.modify")) {
+                    SendUtil.sendMessage(sender, "nopermission");
+                    return true;
+                }
                 if (args.length == 3) {
                     if (!FileUtil.isExists(args[1])) {
                         SendUtil.sendMessage(sender, "nopermission");

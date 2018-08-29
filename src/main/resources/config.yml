@@ -34,17 +34,44 @@ hastitle: "%prefix%&c指定复活点的Title已存在要修改请使用edit命�
 notitle: "%prefix%&c指定复活点的Title不存在要添加请使用add命令!"
 #列表为空
 nolist: "%prefix%&c未发现重生点!"
+#未选择点
+noselectpoint: "%prefix%&c请先选择两个点!输入/re getitem 即可获取选点工具!"
+#发现点
+fxpoint: "%prefix%&c你发现了一个复活点!下次复活如果距离这个复活点最近的话,就会复活在此处!"
+#获得画点物品
+getitem: "%prefix%&c你得到了一个选点工具!"
+#复活点信息
+reviveinfo: "%prefix%&c复活点: %revive% 位置: (%xyz%) 类型: %type% 所在世界: %world%"
+#不是一个组
+nogroup: "%prefix%&c这个复活点不是一个组复活点!"
+#修改组权限
+modifygroup: "%prefix%&c成功修改这个复活点的组!"
 #输入re help后出现的内容
 help: |
-    &c---[Revive]----
-    &b/re &e- &c显示插件信息
-    &b/re help &e- &c插件帮助界面
-    &b/re [add/set] [name] {group} &e- &c创建一个{group}权限组的重生点,不填则通用
-    &b/re [del/delete/remove] [name] &e- &c删除一个重生点
-    &b/re spawn [all/world] &e- &c创建一个全服/世界的主重生点
-    &b/re list [all/world] &e- &c列出全服/世界全部的重生点
-    &b/re title add [name] [title] [subtitle] &e- &c在一个重生点添加一个Title消息
-    &b/re title edit [name] [title] [subtitle] &e- &c编辑一个重生点的Title消息
-    &b/re title [del/delete/remove] [name] &e- &c删除一个重生点的Title消息
-    &b/re tp [name] &e- &c传送到某个重生点
-    &b/re enable/disable [name] &e- &c启动/关闭某个重生点
+  &c---[Revive]----
+  &b/re &e- &c显示插件信息
+  &b/re help &e- &c插件帮助界面
+  &b/re getitem &e- &c获得选点工具
+  &b/re [add/set] [name] {type} {vaule} {height} &e- &c创建个重生点(使用方法请输入/re addhelp查看)
+  &b/re modify [name] [group] &e- &c修改某个权限组复活带你的权限组
+  &b/re [del/delete/remove] [name] &e- &c删除一个重生点
+  &b/re spawn [all/world] &e- &c创建一个全服/世界的主重生点
+  &b/re list [all/world] &e- &c列出全服/世界全部的重生点
+  &b/re info [name] &e- &c查看一个重生点的信息
+  &b/re title add [name] [title] [subtitle] &e- &c在一个重生点添加一个Title消息
+  &b/re title edit [name] [title] [subtitle] &e- &c编辑一个重生点的Title消息
+  &b/re title [del/delete/remove] [name] &e- &c删除一个重生点的Title消息
+  &b/re tp [name] &e- &c传送到某个重生点
+  &b/re enable/disable [name] &e- &c启动/关闭某个重生点
+#输入/re addhelp后出现的内容
+addhelp: |
+  &c/re add命令介绍:
+  &bname &e- &c重生点名字(要创建的复活点名)
+  &btype &e- &c重生点类型可以不填(可填的值为:group,circle,domain)分别代表组复活点,圆柱形区域需发现复活点,普通区域需发现复活点!
+  &bvaule &e- &c复活点的参数,根据你填的type不同参数代表的含义也不同.(group-组名,circle-半径,domain不需要填写!)
+  &bheight &e- &c复活点高度,只有在type为circle的情况下才需要输入!
+  &c例子:
+  &b创建普通复活点: &c/re add test
+  &b创建用户组复活点: &c/re add test2 group Default
+  &b创建圆形区域需发现复活点: &c/re add test3 circle 20 20
+  &b创建普通区域需发现复活点: &c/re add test4 domain

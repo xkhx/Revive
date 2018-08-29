@@ -6,24 +6,24 @@ import me.xiaox.revive.Revive;
 import net.milkbowl.vault.permission.Permission;
 
 public class VaultHook {
-	private Permission perm;
-	private Revive plugin;
-	
-	public VaultHook(Revive plugin) {
-		this.plugin = plugin;
-		initVault();
-	}
-	
-	public Permission getPermission() {
-		return perm;
-	}
-	
-	private boolean initVault() {
+    private Permission perm;
+    private Revive plugin;
+
+    public VaultHook(Revive plugin) {
+        this.plugin = plugin;
+        initVault();
+    }
+
+    public Permission getPermission() {
+        return perm;
+    }
+
+    private boolean initVault() {
         boolean hasNull = false;
-        //³õÊ¼»¯È¨ÏŞÏµÍ³
+        //åˆå§‹åŒ–æƒé™ç³»ç»Ÿ
         RegisteredServiceProvider<Permission> permissionProvider = plugin.getServer().getServicesManager().getRegistration(Permission.class);
-        if(permissionProvider != null){
-        	if ((perm = permissionProvider.getProvider()) == null) hasNull = true;
+        if (permissionProvider != null) {
+            if ((perm = permissionProvider.getProvider()) == null) hasNull = true;
         }
         return !hasNull;
     }

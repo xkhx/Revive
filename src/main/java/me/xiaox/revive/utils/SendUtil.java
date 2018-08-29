@@ -15,73 +15,74 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.xiaox.revive.Revive;
 
 public class SendUtil {
-	
-	private static FileConfiguration config;
-	private static String prefix;
-	
-	public static void initSend() {
-		config = Revive.getConfigFile();
-		prefix = config.getString("prefix");
-	}
-	
-	/**
-	 * ¸øsender·¢ËÍÒ»¸öÏûÏ¢
-	 * @param sender Òª·¢ËÍµÄÈË
-	 * @param key ÅäÖÃ¼ü
-	 */
-	public static void sendMessage(CommandSender sender, String key) {
-		sender.sendMessage(config.getString(key).replace("&", "¡ì").replace("%prefix%", prefix.replace("&", "¡ì")));
-		return;
-	}
-	
-	/**
-	 * ·¢ËÍÒ»¸öTitle¸øÍæ¼Ò
-	 * @param player Ä¿±êÍæ¼Ò
-	 * @param fadeIn µ­ÈëÊ±¼ä tick
-	 * @param stay Í£ÁôÊ±¼ä tick
-	 * @param fadeOut µ­³öÊ±¼ä tick
-	 * @param title ±êÌâÄÚÈİ
-	 * @param subTitle ¸±±êÌâÄÚÈİ
-	 */
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subTitle) {
-		ProtocolManager pm = Revive.getProtocolManager();
-		PacketContainer packet = null;
-		
-		//ÉèÖÃ±êÌâ
-		if (title != null) {
-			title = title.replace("&", "¡ì").replace("%player%", player.getName());
-			packet = pm.createPacket(PacketType.Play.Server.TITLE);
-			packet.getTitleActions().write(0, EnumWrappers.TitleAction.TITLE); // EnumTitleAction
-			packet.getChatComponents().write(0, WrappedChatComponent.fromText(title)); // ±êÌâÄÚÈİ
-			try {
-				pm.sendServerPacket(player, packet, false); // ·¢ËÍÊı¾İ°ü
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		//ÉèÖÃ¸±±êÌâ
-		if (subTitle != null) {
-			subTitle = subTitle.replace("&", "¡ì").replace("%player%", player.getName());
-			packet = pm.createPacket(PacketType.Play.Server.TITLE);
-			packet.getTitleActions().write(0, EnumWrappers.TitleAction.SUBTITLE);
-			packet.getChatComponents().write(0, WrappedChatComponent.fromText(subTitle));
-			try {
-				pm.sendServerPacket(player, packet, false); // ·¢ËÍÊı¾İ°ü
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-		packet = pm.createPacket(PacketType.Play.Server.TITLE);
-		packet.getTitleActions().write(0, EnumWrappers.TitleAction.TIMES);
-		packet.getIntegers().write(0, fadeIn); // ---> c
-		packet.getIntegers().write(1, stay); // ---> d
-		packet.getIntegers().write(2, fadeOut); // ---> e
-		try {
-			pm.sendServerPacket(player, packet, false); // ·¢ËÍÊı¾İ°ü
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		
-	}
+
+    private static FileConfiguration config;
+    private static String prefix;
+
+    public static void initSend() {
+        config = Revive.getConfigFile();
+        prefix = config.getString("prefix");
+    }
+
+    /**
+     * ç»™senderå‘é€ä¸€ä¸ªæ¶ˆæ¯
+     *
+     * @param sender è¦å‘é€çš„äºº
+     * @param key    é…ç½®é”®
+     */
+    public static void sendMessage(CommandSender sender, String key) {
+        sender.sendMessage(config.getString(key).replace("&", "Â§").replace("%prefix%", prefix.replace("&", "Â§")));
+    }
+
+    /**
+     * å‘é€ä¸€ä¸ªTitleç»™ç©å®¶
+     *
+     * @param player   ç›®æ ‡ç©å®¶
+     * @param fadeIn   æ·¡å…¥æ—¶é—´ tick
+     * @param stay     åœç•™æ—¶é—´ tick
+     * @param fadeOut  æ·¡å‡ºæ—¶é—´ tick
+     * @param title    æ ‡é¢˜å†…å®¹
+     * @param subTitle å‰¯æ ‡é¢˜å†…å®¹
+     */
+    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subTitle) {
+        ProtocolManager pm = Revive.getProtocolManager();
+        PacketContainer packet;
+
+        //è®¾ç½®æ ‡é¢˜
+        if (title != null) {
+            title = title.replace("&", "Â§").replace("%player%", player.getName());
+            packet = pm.createPacket(PacketType.Play.Server.TITLE);
+            packet.getTitleActions().write(0, EnumWrappers.TitleAction.TITLE); // EnumTitleAction
+            packet.getChatComponents().write(0, WrappedChatComponent.fromText(title)); // æ ‡é¢˜å†…å®¹
+            try {
+                pm.sendServerPacket(player, packet, false); // å‘é€æ•°æ®åŒ…
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //è®¾ç½®å‰¯æ ‡é¢˜
+        if (subTitle != null) {
+            subTitle = subTitle.replace("&", "Â§").replace("%player%", player.getName());
+            packet = pm.createPacket(PacketType.Play.Server.TITLE);
+            packet.getTitleActions().write(0, EnumWrappers.TitleAction.SUBTITLE);
+            packet.getChatComponents().write(0, WrappedChatComponent.fromText(subTitle));
+            try {
+                pm.sendServerPacket(player, packet, false); // å‘é€æ•°æ®åŒ…
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        packet = pm.createPacket(PacketType.Play.Server.TITLE);
+        packet.getTitleActions().write(0, EnumWrappers.TitleAction.TIMES);
+        packet.getIntegers().write(0, fadeIn); // ---> c
+        packet.getIntegers().write(1, stay); // ---> d
+        packet.getIntegers().write(2, fadeOut); // ---> e
+        try {
+            pm.sendServerPacket(player, packet, false); // å‘é€æ•°æ®åŒ…
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

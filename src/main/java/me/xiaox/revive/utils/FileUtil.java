@@ -18,398 +18,344 @@ import me.xiaox.revive.Revive;
 import me.xiaox.revive.enums.ReviveType;
 
 public class FileUtil {
-	
-	/**
-	 * »ñÈ¡Ä³¸ö¸´»îµãÊÇ·ñÆô¶¯
-	 * @param name ¸´»îµãÃû
-	 * @return ´æÔÚ·µ»Øtrue·ñÔò·µ»Øfalse
-	 */
-	public static boolean isEnableRevive(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return fc.get(name + ".enable") == null || fc.getBoolean(name + ".enable");
-	}
-	
-	/**
-	 * Æô¶¯Ä³¸ö¸´»îµã
-	 * @param name ¸´»îµãÃû
-	 */
-	public static void enableRevive(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name + ".enable", true);
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * ½ûÓÃÄ³¸ö¸´»îµã
-	 * @param name ¸´»îµãÃû
-	 */
-	public static void disableRevive(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name + ".enable", false);
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * Ìí¼ÓÒ»¸ö¸´»îµã
-	 * @param type
-	 * @param loc
-	 * @param key
-	 * @param group
-	 */
-	public static void addRevive(ReviveType type, Location loc, String name, String gr) {
-		FileConfiguration fc = Revive.getReviveFile();
-		String world = loc.getWorld().getName();
-		double x = loc.getX();
-		double y = loc.getY();
-		double z = loc.getZ();
-		float pitch = loc.getPitch();
-		float yaw = loc.getYaw();
-		fc.set(name + ".enable", true);
-		fc.set(name + ".world", world);
-		fc.set(name + ".x", x);
-		fc.set(name + ".y", y);
-		fc.set(name + ".z", z);
-		fc.set(name + ".pitch", pitch);
-		fc.set(name + ".yaw", yaw);
-		fc.set(name + ".type", type.toString());
-		if(type == ReviveType.GROUP) {
-			fc.set(name + ".group", gr);
-		}else if(type == ReviveType.RADIUS) {
-			fc.set(name + ".radius", gr);
-		}
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * ¸øÖ¸¶¨¸´»îµãÌí¼ÓÒ»¸öTitle
-	 * @param name ¸´»îµãÃû
-	 * @param title ÒªÌí¼ÓµÄtitle±êÌâ
-	 * @param subtitle ÒªÌí¼Ó¸±±êÌâ
-	 */
-	public static void addTitle(String name, String title, String subtitle) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name + ".title.title", title);
-		fc.set(name + ".title.subtitle", subtitle);
-		Revive.saveRevive(fc);
-	}
-	public static String getTitleName(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return fc.getString(name + ".title.title");
-	}
-	public static String getSubTitle(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return fc.getString(name + ".title.subtitle");
-	}
-	
-	/**
-	 * ÅĞ¶ÏÒ»¸ö¸´»îµãÊÇ·ñ´æÔÚtitle
-	 * @param name ¸´»îµãÃû
-	 * @return ´æÔÚÔò·µ»Øtrue·ñÔò·µ»Øfalse
-	 */
-	public static boolean hasTitle(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return fc.get(name + ".title") != null ? true:false;
-	}
-	
-	/**
-	 * ±à¼­Ö¸¶¨¸´»îµãµÄtitle
-	 * @param name ¸´»îµãÃû
-	 * @param title Òª±à¼­µÄtitle±êÌâ
-	 * @param subtitle Òª±à¼­µÄ¸±±êÌâ
-	 */
-	public static void editTitle(String name, String title, String subtitle) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name + ".title.title", title);
-		fc.set(name + ".title.subtitle", subtitle);
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * É¾³ıÖ¸¶¨¸´»îµãµÄTitle
-	 * @param name ¸´»îµãÃû
-	 */
-	public static void delTitle(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name + ".title", null);
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * É¾³ı¸´»îµã
-	 * @param name ¸´»îµãÃû
-	 */
-	public static void delRevive(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		fc.set(name, null);
-		Revive.saveRevive(fc);
-	}
-	
-	/**
-	 * ´Óyml»ñÈ¡Location
-	 * @param key
-	 * @return
-	 */
-	public static Location getLocation(String key) {
-		FileConfiguration fc = Revive.getReviveFile();
-		String world = fc.getString(key + ".world");
-		double x = fc.getDouble(key + ".x");
-		double y = fc.getDouble(key + ".y");
-		double z = fc.getDouble(key + ".z");
-		float pitch = (float) fc.getDouble(key + ".pitch");
-		float yaw = (float) fc.getDouble(key + ".yaw");
-		return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
-	}
-	
-	/**
-	 * »ñÈ¡¸´»îµãÀàĞÍ
-	 * @param name ¸´»îµãÃû
-	 * @return ¸´»îµãÀàĞÍÃ¶¾Ù
-	 */
-	public static ReviveType getType(String name) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return ReviveType.valueOf(fc.getString(name + ".type"));
-	}
-	
-	/**
-	 * »ñÈ¡ÅÅĞòºóµÄ¸´»îµã
-	 * @param player
-	 * @param worldName
-	 * @return
-	 */
-	public static List<String> getSortReviveName(Player player) {
-		List<String> list = getReviveNameInWorld(player.getWorld().getName());
-		List<Double> distances = new ArrayList<>();
-		Map<Double, String> map = new HashMap<>();
-		List<String> sortlist = new ArrayList<>();
-		for(String name : list) {
-			double distance = player.getLocation().distance(getLocation(name));
-			distances.add(distance);
-			map.put(distance, name);
-		}
-		
-		Collections.sort(distances);
-		
-		for(double distance : distances) {
-			sortlist.add(map.get(distance));
-		}
-		
-		map.clear();
-		return sortlist;
-	}
-	
-	/**
-	 * »ñÈ¡Ä³¸öÊÀ½çµÄ¸´»îµã
-	 * @param worldName ÊÀ½çÃû
-	 * @return ¸´»îµÄlist
-	 */
-	public static List<String> getReviveNameInWorld(String worldName) {
-		List<String> list = new ArrayList<String>();
-		FileConfiguration config = Revive.getReviveFile();
-		//±äÁ¿ÅäÖÃ
-		for(String name : config.getKeys(false)) {
-			//Èç¹ûÊÇÖ¸¶¨ÊÀ½ç
-			if(config.getString(name + ".world") != null && config.getString(name + ".world").equalsIgnoreCase(worldName)) {
-				list.add(name);
-			}
-		}
-		return list;
-	}
-	
-	/**
-	 * »ñÈ¡¸´»îµãµÄÃû×Ö
-	 * @param worldName ÊÀ½çÃû
-	 * @return
-	 */
-	/*
-	public static <T> Map<ReviveType, List<String>> getReviveNameList(String worldName) {
-		Map<ReviveType, List<String>> map = new HashMap<ReviveType, List<String>>();
-		List<String> de = new ArrayList<String>();
-		List<String> gl = new ArrayList<String>();
-		List<String> gr = new ArrayList<String>();
-		List<String> ra = new ArrayList<String>();
-		List<String> wo = new ArrayList<String>();
-		FileConfiguration config =Revive.getReviveFile();
-		if(worldName == null || worldName.equalsIgnoreCase("") || worldName.equalsIgnoreCase("all")) {
-			for(String name : Revive.getReviveFile().getKeys(false)) {
-				ReviveType type = getType(name);
-				switch (type) {
-				case DEFAULT:
-					de.add(name);
-					break;
-				case GLOBAL:
-					gl.add(name);
-					break;
-				case GROUP:
-					gr.add(name);
-					break;
-				case RADIUS:
-					ra.add(name);
-					break;
-				case WORLD:
-					wo.add(name);
-					break;
-				default:
-					break;
-				}
-			}
-			map.put(ReviveType.DEFAULT, de);
-			map.put(ReviveType.GLOBAL, gl);
-			map.put(ReviveType.GROUP, gr);
-			map.put(ReviveType.RADIUS, ra);
-			map.put(ReviveType.WORLD, wo);
-			return map;
-		}
-		for(String name : Revive.getConfigFile().getKeys(false)) {
-			if(config.getString(name + ".world") != null && config.getString(name + ".world").equalsIgnoreCase(worldName)) {
-				ReviveType type = getType(name);
-				switch (type) {
-				case DEFAULT:
-					de.add(name);
-					break;
-				case GLOBAL:
-					gl.add(name);
-					break;
-				case GROUP:
-					gr.add(name);
-					break;
-				case RADIUS:
-					ra.add(name);
-					break;
-				case WORLD:
-					wo.add(name);
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		map.put(ReviveType.DEFAULT, de);
-		map.put(ReviveType.GLOBAL, gl);
-		map.put(ReviveType.GROUP, gr);
-		map.put(ReviveType.RADIUS, ra);
-		map.put(ReviveType.WORLD, wo);
-		return map;
-	}
-	*/
-	
-	/**
-	 * »ñÈ¡¸´»îµãÁĞ±í worldnameÎªnull»òallÔò·µ»ØÈ«·ş·ñÔò·µ»ØÄ¿±êÊÀ½ç
-	 * @param worldname
-	 * @return ·µ»Ø¸´»îµãListÁĞ±í
-	 */
-	public static List<String> getReviveList(String worldName) {
-		List<String> list = new ArrayList<String>();
-		FileConfiguration config = Revive.getReviveFile();
-		if(worldName == null || worldName.equalsIgnoreCase("") || worldName.equalsIgnoreCase("all")) {
-			for(String name : Revive.getReviveFile().getKeys(false)) {
-				ReviveType type = getType(name);
-				switch (type) {
-				case DEFAULT:
-					list.add("¡ì2" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				case GLOBAL:
-					list.add("¡ìc¡ìl" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				case GROUP:
-					list.add("¡ìb" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ") - " 
-					+ config.getDouble(name + ".group"));
-					break;
-				case RADIUS:
-					list.add("¡ì5" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ") - °ë¾¶:" 
-					+ config.getDouble(name + ".radius"));
-					break;
-				case WORLD:
-					list.add("¡ìc" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				default:
-					break;
-				}
-			}
-			return list;
-		}
-		for(String name : Revive.getReviveFile().getKeys(false)) {
-			if(config.getString(name + ".world") != null && config.getString(name + ".world").equalsIgnoreCase(worldName)) {
-				ReviveType type = getType(name);
-				switch (type) {
-				case DEFAULT:
-					list.add("¡ì2" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				case GLOBAL:
-					list.add("¡ìc¡ìl" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				case GROUP:
-					list.add("¡ìb" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ") - " 
-					+ config.getDouble(name + ".group"));
-					break;
-				case RADIUS:
-					list.add("¡ì5" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ") - °ë¾¶:" 
-					+ config.getDouble(name + ".radius"));
-					break;
-				case WORLD:
-					list.add("¡ìc" + name + "(" + config.getString(name + ".world") 
-					+ " " + config.getDouble(name + ".x") 
-					+ " " + config.getDouble(name + ".y") 
-					+ " " + config.getDouble(name + ".z") + ")");
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		return list;
-	}
-	
-	/**
-	 * ÅĞ¶ÏÊÇ·ñ´æÔÚ
-	 * @param key
-	 * @return ´æÔÚ·µ»Øtrue·ñÔò·µ»Øfalse
-	 */
-	public static boolean isExists(String key) {
-		FileConfiguration fc = Revive.getReviveFile();
-		return fc.get(key) != null;
-	}
-	
-	/**
-	 * ¼ÓÔØÒ»¸öFile
-	 * @param file
-	 * @return ·µ»ØÒ»¸öconfig
-	 */
-	public static FileConfiguration load(File file){
-		if (!(file.exists())){
-			try{
-				file.createNewFile();
-				}
-			catch(IOException   e){
-				e.printStackTrace();
-				}
-			}
-		return YamlConfiguration.loadConfiguration(file);
-	}
+
+    /**
+     * è·å–æŸä¸ªå¤æ´»ç‚¹æ˜¯å¦å¯åŠ¨
+     *
+     * @param name å¤æ´»ç‚¹å
+     * @return å­˜åœ¨è¿”å›trueå¦åˆ™è¿”å›false
+     */
+    public static boolean isEnableRevive(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return fc.get(name + ".enable") == null || fc.getBoolean(name + ".enable");
+    }
+
+    /**
+     * å¯åŠ¨æŸä¸ªå¤æ´»ç‚¹
+     *
+     * @param name å¤æ´»ç‚¹å
+     */
+    public static void enableRevive(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name + ".enable", true);
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * ç¦ç”¨æŸä¸ªå¤æ´»ç‚¹
+     *
+     * @param name å¤æ´»ç‚¹å
+     */
+    public static void disableRevive(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name + ".enable", false);
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * æ·»åŠ ä¸€ä¸ªå¤æ´»ç‚¹
+     *
+     * @param type   å¤æ´»ç‚¹ç±»å‹
+     * @param loc    å¤æ´»ç‚¹ä½ç½®
+     * @param loc1   åŒºåŸŸå¤æ´»ç‚¹ä½ç½®1(å…¶ä»–æ—¶å€™è®¾ç½®ä¸ºnull)
+     * @param loc2   åŒºåŸŸå¤æ´»ç‚¹ä½ç½®2(å…¶ä»–æ—¶å€™è®¾ç½®ä¸ºnull)
+     * @param name   å¤æ´»ç‚¹åç§°
+     * @param value  å¤æ´»ç‚¹å‚æ•°
+     * @param height å¤æ´»ç‚¹é«˜åº¦(ä»…åœ¨åœ†å½¢å¤æ´»ç‚¹çš„æ—¶å€™ å…¶ä»–æ—¶å€™è®¾ç½®ä¸ºnullæˆ–"")
+     */
+    public static void addRevive(ReviveType type, Location loc, Location loc1, Location loc2, String name, String value, String height) {
+        FileConfiguration fc = Revive.getReviveFile();
+        String world = loc.getWorld().getName();
+        double x = loc.getX();
+        double y = loc.getY();
+        double z = loc.getZ();
+        float pitch = loc.getPitch();
+        float yaw = loc.getYaw();
+        fc.set(name + ".enable", true);
+        fc.set(name + ".world", world);
+        fc.set(name + ".x", x);
+        fc.set(name + ".y", y);
+        fc.set(name + ".z", z);
+        fc.set(name + ".pitch", pitch);
+        fc.set(name + ".yaw", yaw);
+        fc.set(name + ".type", type.toString());
+        if (type == ReviveType.GROUP) {
+            fc.set(name + ".group", value);
+        } else if (type == ReviveType.CIRCLE) {
+            fc.set(name + ".radius", value);
+            fc.set(name + ".height", height);
+        } else if (type == ReviveType.DOMAIN) {
+            String world1 = loc1.getWorld().getName();
+            String world2 = loc2.getWorld().getName();
+            double x1 = loc1.getX();
+            double x2 = loc2.getX();
+            double y1 = loc1.getY();
+            double y2 = loc2.getY();
+            double z1 = loc1.getZ();
+            double z2 = loc2.getZ();
+            fc.set(name + ".point.loc1.world", world1);
+            fc.set(name + ".point.loc2.world", world2);
+            fc.set(name + ".point.loc1.x", x1);
+            fc.set(name + ".point.loc2.x", x2);
+            fc.set(name + ".point.loc1.y", y1);
+            fc.set(name + ".point.loc2.y", y2);
+            fc.set(name + ".point.loc1.z", z1);
+            fc.set(name + ".point.loc2.z", z2);
+        }
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * ç»™æŒ‡å®šå¤æ´»ç‚¹æ·»åŠ ä¸€ä¸ªTitle
+     *
+     * @param name     å¤æ´»ç‚¹å
+     * @param title    è¦æ·»åŠ çš„titleæ ‡é¢˜
+     * @param subtitle è¦æ·»åŠ å‰¯æ ‡é¢˜
+     */
+    public static void addTitle(String name, String title, String subtitle) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name + ".title.title", title);
+        fc.set(name + ".title.subtitle", subtitle);
+        Revive.saveRevive(fc);
+    }
+
+    public static String getTitleName(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return fc.getString(name + ".title.title");
+    }
+
+    public static String getSubTitle(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return fc.getString(name + ".title.subtitle");
+    }
+
+    /**
+     * åˆ¤æ–­ä¸€ä¸ªå¤æ´»ç‚¹æ˜¯å¦å­˜åœ¨title
+     *
+     * @param name å¤æ´»ç‚¹å
+     * @return å­˜åœ¨åˆ™è¿”å›trueå¦åˆ™è¿”å›false
+     */
+    public static boolean hasTitle(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return fc.get(name + ".title") != null;
+    }
+
+    /**
+     * ç¼–è¾‘æŒ‡å®šå¤æ´»ç‚¹çš„title
+     *
+     * @param name     å¤æ´»ç‚¹å
+     * @param title    è¦ç¼–è¾‘çš„titleæ ‡é¢˜
+     * @param subtitle è¦ç¼–è¾‘çš„å‰¯æ ‡é¢˜
+     */
+    public static void editTitle(String name, String title, String subtitle) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name + ".title.title", title);
+        fc.set(name + ".title.subtitle", subtitle);
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * åˆ é™¤æŒ‡å®šå¤æ´»ç‚¹çš„Title
+     *
+     * @param name å¤æ´»ç‚¹å
+     */
+    public static void delTitle(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name + ".title", null);
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * åˆ é™¤å¤æ´»ç‚¹
+     *
+     * @param name å¤æ´»ç‚¹å
+     */
+    public static void delRevive(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        fc.set(name, null);
+        Revive.saveRevive(fc);
+    }
+
+    /**
+     * ä»ymlè·å–Location
+     *
+     * @param key é”®
+     * @return ä½ç½®
+     */
+    public static Location getLocation(String key) {
+        FileConfiguration fc = Revive.getReviveFile();
+        String world = fc.getString(key + ".world");
+        double x = fc.getDouble(key + ".x");
+        double y = fc.getDouble(key + ".y");
+        double z = fc.getDouble(key + ".z");
+        float pitch = (float) fc.getDouble(key + ".pitch");
+        float yaw = (float) fc.getDouble(key + ".yaw");
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
+
+    /**
+     * è·å–å¤æ´»ç‚¹ç±»å‹
+     *
+     * @param name å¤æ´»ç‚¹å
+     * @return å¤æ´»ç‚¹ç±»å‹æšä¸¾
+     */
+    public static ReviveType getType(String name) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return ReviveType.valueOf(fc.getString(name + ".type"));
+    }
+
+    /**
+     * è·å–æ’åºåçš„å¤æ´»ç‚¹
+     *
+     * @param player ç©å®¶
+     * @return æ’åºåå¤æ´»ç‚¹
+     */
+    public static List<String> getSortReviveName(Player player) {
+        List<String> list = getReviveNameInWorld(player.getWorld().getName());
+        List<Double> distances = new ArrayList<>();
+        Map<Double, String> map = new HashMap<>();
+        List<String> sortList = new ArrayList<>();
+        for (String name : list) {
+            double distance = player.getLocation().distance(getLocation(name));
+            distances.add(distance);
+            map.put(distance, name);
+        }
+
+        Collections.sort(distances);
+
+        for (double distance : distances) {
+            sortList.add(map.get(distance));
+        }
+
+        map.clear();
+        return sortList;
+    }
+
+    /**
+     * è·å–æŸä¸ªä¸–ç•Œçš„å¤æ´»ç‚¹
+     *
+     * @param worldName ä¸–ç•Œå
+     * @return å¤æ´»çš„list
+     */
+    public static List<String> getReviveNameInWorld(String worldName) {
+        List<String> list = new ArrayList<>();
+        FileConfiguration config = Revive.getReviveFile();
+        //å˜é‡é…ç½®
+        for (String name : config.getKeys(false)) {
+            //å¦‚æœæ˜¯æŒ‡å®šä¸–ç•Œ
+            if (config.getString(name + ".world") != null && config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                list.add(name);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * è·å–å¤æ´»ç‚¹åˆ—è¡¨ worldNameä¸ºnullæˆ–allåˆ™è¿”å›å…¨æœå¦åˆ™è¿”å›ç›®æ ‡ä¸–ç•Œ
+     *
+     * @param worldName ä¸–ç•Œå
+     * @return è¿”å›å¤æ´»ç‚¹Liståˆ—è¡¨
+     */
+    public static List<String> getReviveList(String worldName) {
+        List<String> list = new ArrayList<>();
+
+        FileConfiguration config = Revive.getReviveFile();
+
+        for (String name : config.getKeys(false)) {
+            ReviveType type = getType(name);
+            switch (type) {
+                case DEFAULT:
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§2" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ")");
+                    break;
+                case GLOBAL:
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§cÂ§l" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ")");
+                    break;
+                case GROUP:
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§b" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ") - "
+                            + config.getDouble(name + ".group"));
+                    break;
+                case CIRCLE:
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§5" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ") - åŠå¾„:"
+                            + config.getDouble(name + ".radius")
+                            + " é«˜åº¦:" + config.getDouble(name + ".height"));
+                    break;
+                case WORLD:
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§c" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ")");
+                    break;
+                case DOMAIN: //è¦æ”¹
+                    if (worldName != null && config.getString(name + ".world") != null && !config.getString(name + ".world").equalsIgnoreCase(worldName)) {
+                        break;
+                    }
+                    list.add("Â§5" + name + "(" + config.getString(name + ".world")
+                            + " " + config.getDouble(name + ".x")
+                            + " " + config.getDouble(name + ".y")
+                            + " " + config.getDouble(name + ".z") + ") - åŠå¾„:"
+                            + config.getDouble(name + ".radius")
+                            + " é«˜åº¦:" + config.getDouble(name + ".height"));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return list;
+    }
+
+    /**
+     * åˆ¤æ–­æ˜¯å¦å­˜åœ¨
+     *
+     * @param key é”®
+     * @return å­˜åœ¨è¿”å›trueå¦åˆ™è¿”å›false
+     */
+    public static boolean isExists(String key) {
+        FileConfiguration fc = Revive.getReviveFile();
+        return fc.get(key) != null;
+    }
+
+    /**
+     * åŠ è½½ä¸€ä¸ªFile
+     *
+     * @param file æ–‡ä»¶
+     * @return è¿”å›ä¸€ä¸ªconfig
+     */
+    public static FileConfiguration load(File file) {
+        if (!file.exists()) {
+            try {
+
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return YamlConfiguration.loadConfiguration(file);
+    }
 }

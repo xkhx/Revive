@@ -2,6 +2,7 @@ package me.xiaox.revive.listeners;
 
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,34 +19,51 @@ public class PlayerRespawn implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
+
         List<String> list = FileUtil.getSortReviveName(player);
-        //System.out.println(list);
+
         for (String name : list) {
             if (!FileUtil.isEnableRevive(name)) {
                 continue;
             }
             ReviveType type = FileUtil.getType(name);
+
+            boolean autoRespawn = Revive.getConfigFile().getBoolean("settings.autorespawn", false);
+            Location loc = FileUtil.getLocation(name);
+
             if (type != ReviveType.GROUP && type != ReviveType.CIRCLE && type != ReviveType.DOMAIN && type != ReviveType.WORLD) {
-                event.setRespawnLocation(FileUtil.getLocation(name));
+                event.setRespawnLocation(loc);
+                if (autoRespawn) {
+                    player.spigot().respawn();
+                }
                 if (FileUtil.hasTitle(name)) {
                     sendMessage(player, name);
                 }
                 return;
             }
+
             if ((type == ReviveType.GROUP && player.hasPermission("revive.point."
                     + player.getWorld().getName() + "." + name))
                     || (type == ReviveType.CIRCLE && player.hasPermission("revive.circle."
                     + player.getWorld().getName() + "." + name))
                     || (type == ReviveType.DOMAIN && player.hasPermission("revive.domain."
                     + player.getWorld().getName() + "." + name))) {
-                event.setRespawnLocation(FileUtil.getLocation(name));
+
+                event.setRespawnLocation(loc);
+
+                if (autoRespawn) {
+                    player.spigot().respawn();
+                }
+
                 if (FileUtil.hasTitle(name)) {
                     sendMessage(player, name);
                 }
                 return;
             }
+
         }
+
         String worldName = player.getWorld().getName();
         if (FileUtil.isExists(worldName) && FileUtil.getType(worldName) == ReviveType.WORLD) {
             if (!FileUtil.isEnableRevive(worldName)) {
@@ -58,11 +76,20 @@ public class PlayerRespawn implements Listener {
             if (!FileUtil.isEnableRevive("spawn")) {
                 return;
             }
-            event.setRespawnLocation(FileUtil.getLocation("spawn"));
+
+            boolean autoRespawn = Revive.getConfigFile().getBoolean("settings.autorespawn", false);
+            Location loc = FileUtil.getLocation("spawn");
+
+            event.setRespawnLocation(loc);
+            if (autoRespawn) {
+                player.spigot().respawn();
+            }
+
             if (FileUtil.hasTitle("spawn")) {
                 sendMessage(player, "spawn");
             }
         }
+
     }
 
     private void sendMessage(Player player, String name) {

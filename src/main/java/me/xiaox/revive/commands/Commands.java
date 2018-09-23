@@ -30,13 +30,13 @@ public class Commands implements CommandExecutor {
                     SendUtil.sendMessage(sender, "nopermission");
                     return true;
                 }
-                final CommandSender cSender = sender;
+
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         String webText = Revive.getStringByWeb("https://gitee.com/D_xiaox/ReviveUpdate/raw/master/re.txt");
                         for (String text : webText.split("\\|")) {
-                            cSender.sendMessage(text);
+                            sender.sendMessage(text);
                         }
                     }
                 }.runTaskAsynchronously(Revive.getInstance());
@@ -79,7 +79,7 @@ public class Commands implements CommandExecutor {
                     //group
                     if (args[2].equalsIgnoreCase("group") && args.length == 4) {
                         World world = player.getLocation().getWorld();
-                        if (!Revive.getPremission().groupAdd(world, args[3], "revive.point."
+                        if (!Revive.getPermission().groupAdd(world, args[3], "revive.point."
                                 + world.getName() + "." + args[1])) {
                             return true;
                         }
@@ -93,7 +93,7 @@ public class Commands implements CommandExecutor {
                         if (Revive.isInteger(args[3]) && Revive.isInteger(args[4])) {
                             FileUtil.addRevive(ReviveType.CIRCLE, player.getLocation()
                                     , null, null, args[1], args[3], args[4]);
-                            SendUtil.sendMessage(sender, "adduccessful");
+                            SendUtil.sendMessage(sender, "addsuccessful");
                             return true;
                         }
                         SendUtil.sendMessage(sender, "parametererror");
@@ -110,7 +110,7 @@ public class Commands implements CommandExecutor {
                                 , PlayerClick.locB.get(player), args[1], "", "");
                         PlayerClick.locA.remove(player);
                         PlayerClick.locB.remove(player);
-                        SendUtil.sendMessage(sender, "adduccessful");
+                        SendUtil.sendMessage(sender, "addsuccessful");
                         return true;
                     }
                 }
@@ -361,12 +361,12 @@ public class Commands implements CommandExecutor {
                         SendUtil.sendMessage(sender, "nogroup");
                         return true;
                     }
-                    if (!Revive.getPremission().groupAdd(Bukkit.getWorld(
+                    if (!Revive.getPermission().groupAdd(Bukkit.getWorld(
                             config.getString(args[1] + ".world")), args[2], "revive.point."
                             + config.getString(args[1] + ".world") + "." + args[1])) {
                         return true;
                     }
-                    Revive.getPremission().groupRemove(Bukkit.getWorld(
+                    Revive.getPermission().groupRemove(Bukkit.getWorld(
                             config.getString(args[1] + ".world"))
                             , config.getString(args[1] + ".group"), "revive.point."
                                     + config.getString(args[1] + ".world") + "." + args[1]);

@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import me.xiaox.revive.Revive;
 import me.xiaox.revive.enums.ReviveType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class FileUtil {
 
@@ -64,45 +65,50 @@ public class FileUtil {
      * @param height 复活点高度(仅在圆形复活点的时候 其他时候设置为null或"")
      */
     public static void addRevive(ReviveType type, Location loc, Location loc1, Location loc2, String name, String value, String height) {
-        FileConfiguration fc = Revive.getReviveFile();
-        String world = loc.getWorld().getName();
-        double x = loc.getX();
-        double y = loc.getY();
-        double z = loc.getZ();
-        float pitch = loc.getPitch();
-        float yaw = loc.getYaw();
-        fc.set(name + ".enable", true);
-        fc.set(name + ".world", world);
-        fc.set(name + ".x", x);
-        fc.set(name + ".y", y);
-        fc.set(name + ".z", z);
-        fc.set(name + ".pitch", pitch);
-        fc.set(name + ".yaw", yaw);
-        fc.set(name + ".type", type.toString());
-        if (type == ReviveType.GROUP) {
-            fc.set(name + ".group", value);
-        } else if (type == ReviveType.CIRCLE) {
-            fc.set(name + ".radius", value);
-            fc.set(name + ".height", height);
-        } else if (type == ReviveType.DOMAIN) {
-            String world1 = loc1.getWorld().getName();
-            String world2 = loc2.getWorld().getName();
-            double x1 = loc1.getX();
-            double x2 = loc2.getX();
-            double y1 = loc1.getY();
-            double y2 = loc2.getY();
-            double z1 = loc1.getZ();
-            double z2 = loc2.getZ();
-            fc.set(name + ".point.loc1.world", world1);
-            fc.set(name + ".point.loc2.world", world2);
-            fc.set(name + ".point.loc1.x", x1);
-            fc.set(name + ".point.loc2.x", x2);
-            fc.set(name + ".point.loc1.y", y1);
-            fc.set(name + ".point.loc2.y", y2);
-            fc.set(name + ".point.loc1.z", z1);
-            fc.set(name + ".point.loc2.z", z2);
-        }
-        Revive.saveRevive(fc);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                FileConfiguration fc = Revive.getReviveFile();
+                String world = loc.getWorld().getName();
+                double x = loc.getX();
+                double y = loc.getY();
+                double z = loc.getZ();
+                float pitch = loc.getPitch();
+                float yaw = loc.getYaw();
+                fc.set(name + ".enable", true);
+                fc.set(name + ".world", world);
+                fc.set(name + ".x", x);
+                fc.set(name + ".y", y);
+                fc.set(name + ".z", z);
+                fc.set(name + ".pitch", pitch);
+                fc.set(name + ".yaw", yaw);
+                fc.set(name + ".type", type.toString());
+                if (type == ReviveType.GROUP) {
+                    fc.set(name + ".group", value);
+                } else if (type == ReviveType.CIRCLE) {
+                    fc.set(name + ".radius", value);
+                    fc.set(name + ".height", height);
+                } else if (type == ReviveType.DOMAIN) {
+                    String world1 = loc1.getWorld().getName();
+                    String world2 = loc2.getWorld().getName();
+                    double x1 = loc1.getX();
+                    double x2 = loc2.getX();
+                    double y1 = loc1.getY();
+                    double y2 = loc2.getY();
+                    double z1 = loc1.getZ();
+                    double z2 = loc2.getZ();
+                    fc.set(name + ".point.loc1.world", world1);
+                    fc.set(name + ".point.loc2.world", world2);
+                    fc.set(name + ".point.loc1.x", x1);
+                    fc.set(name + ".point.loc2.x", x2);
+                    fc.set(name + ".point.loc1.y", y1);
+                    fc.set(name + ".point.loc2.y", y2);
+                    fc.set(name + ".point.loc1.z", z1);
+                    fc.set(name + ".point.loc2.z", z2);
+                }
+                Revive.saveRevive(fc);
+            }
+        }.runTaskAsynchronously(Revive.getInstance());
     }
 
     /**
@@ -180,7 +186,7 @@ public class FileUtil {
      * 从yml获取Location
      *
      * @param key 键
-     * @return 位置
+     * @return {@link Location}
      */
     public static Location getLocation(String key) {
         FileConfiguration fc = Revive.getReviveFile();
@@ -211,10 +217,10 @@ public class FileUtil {
      * @return 排序后复活点
      */
     public static List<String> getSortReviveName(Player player) {
+        List<String> sortList = new ArrayList<>();
         List<String> list = getReviveNameInWorld(player.getWorld().getName());
         List<Double> distances = new ArrayList<>();
         Map<Double, String> map = new HashMap<>();
-        List<String> sortList = new ArrayList<>();
         for (String name : list) {
             double distance = player.getLocation().distance(getLocation(name));
             distances.add(distance);
@@ -327,6 +333,7 @@ public class FileUtil {
                     break;
             }
         }
+
         return list;
     }
 
@@ -345,7 +352,7 @@ public class FileUtil {
      * 加载一个File
      *
      * @param file 文件
-     * @return 返回一个config
+     * @return {@link FileConfiguration}
      */
     public static FileConfiguration load(File file) {
         if (!file.exists()) {

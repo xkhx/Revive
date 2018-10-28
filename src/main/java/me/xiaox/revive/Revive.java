@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import me.xiaox.revive.enums.ReviveType;
+import me.xiaox.revive.listeners.InvincibleTime;
 import me.xiaox.revive.listeners.PlayerClick;
 import org.bstats.revive.Metrics;
 import org.bukkit.Location;
@@ -108,6 +109,7 @@ public class Revive extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
         getServer().getPluginManager().registerEvents(new PlayerClick(), this);
+        getServer().getPluginManager().registerEvents(new InvincibleTime(), this);
 
         //运行玩家区域检查
         doTick();

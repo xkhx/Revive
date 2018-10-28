@@ -46,6 +46,16 @@ reviveinfo: "%prefix%&c复活点: %revive% 位置: (%xyz%) 类型: %type% 所在
 nogroup: "%prefix%&c这个复活点不是一个组复活点!"
 #修改组权限
 modifygroup: "%prefix%&c成功修改这个复活点的组!"
+#插件设置
+settings:
+  #启动自动复活
+  autorespawn: true
+  #无敌时间
+  invincible:
+    #是否启动无敌时间
+    enable: true
+    #持续时间
+    time: 5
 #输入re help后出现的内容
 help: |
   &c---[Revive]----
@@ -62,6 +72,7 @@ help: |
   &b/re title edit [name] [title] [subtitle] &e- &c编辑一个重生点的Title消息
   &b/re title [del/delete/remove] [name] &e- &c删除一个重生点的Title消息
   &b/re tp [name] &e- &c传送到某个重生点
+  &b/re recent &e- &c传送到最近的复活点
   &b/re enable/disable [name] &e- &c启动/关闭某个重生点
 #输入/re addhelp后出现的内容
 addhelp: |

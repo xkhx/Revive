@@ -1,12 +1,16 @@
 package me.xiaox.revive.listeners;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,9 +21,34 @@ import me.xiaox.revive.utils.SendUtil;
 
 public class PlayerRespawn implements Listener {
 
+    public static List<Player> invincible = new ArrayList<>();
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (Revive.getConfigFile().getBoolean("settings.autorespawn", false)) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    event.getEntity().spigot().respawn();
+                }
+            }.runTask(Revive.getInstance());
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
+
+        //无敌时间
+        if (Revive.getConfigFile().getBoolean("settings.invincible.enable", false)) {
+            invincible.add(player);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    invincible.remove(player);
+                }
+            }.runTaskLater(Revive.getInstance(), Revive.getConfigFile().getLong("settings.invincible.time") * 20L);
+        }
 
         List<String> list = FileUtil.getSortReviveName(player);
 
@@ -29,14 +58,11 @@ public class PlayerRespawn implements Listener {
             }
             ReviveType type = FileUtil.getType(name);
 
-            boolean autoRespawn = Revive.getConfigFile().getBoolean("settings.autorespawn", false);
             Location loc = FileUtil.getLocation(name);
 
-            if (type != ReviveType.GROUP && type != ReviveType.CIRCLE && type != ReviveType.DOMAIN && type != ReviveType.WORLD) {
+            if (type == ReviveType.DEFAULT) {
                 event.setRespawnLocation(loc);
-                if (autoRespawn) {
-                    player.spigot().respawn();
-                }
+
                 if (FileUtil.hasTitle(name)) {
                     sendMessage(player, name);
                 }
@@ -52,16 +78,11 @@ public class PlayerRespawn implements Listener {
 
                 event.setRespawnLocation(loc);
 
-                if (autoRespawn) {
-                    player.spigot().respawn();
-                }
-
                 if (FileUtil.hasTitle(name)) {
                     sendMessage(player, name);
                 }
                 return;
             }
-
         }
 
         String worldName = player.getWorld().getName();
@@ -69,7 +90,14 @@ public class PlayerRespawn implements Listener {
             if (!FileUtil.isEnableRevive(worldName)) {
                 return;
             }
-            sendMessage(player, worldName);
+
+            Location loc = FileUtil.getLocation(worldName);
+
+            event.setRespawnLocation(loc);
+
+            if (FileUtil.hasTitle(worldName)) {
+                sendMessage(player, worldName);
+            }
             return;
         }
         if (FileUtil.isExists("spawn") && FileUtil.getType("spawn") == ReviveType.GLOBAL) {
@@ -77,13 +105,9 @@ public class PlayerRespawn implements Listener {
                 return;
             }
 
-            boolean autoRespawn = Revive.getConfigFile().getBoolean("settings.autorespawn", false);
             Location loc = FileUtil.getLocation("spawn");
 
             event.setRespawnLocation(loc);
-            if (autoRespawn) {
-                player.spigot().respawn();
-            }
 
             if (FileUtil.hasTitle("spawn")) {
                 sendMessage(player, "spawn");

@@ -378,7 +378,79 @@ public class Commands implements CommandExecutor {
             }
             //如果输入/re addhelp
             if (args[0].equalsIgnoreCase("addhelp")) {
+                if (!sender.hasPermission("revive.addhelp")) {
+                    SendUtil.sendMessage(sender, "nopermission");
+                    return true;
+                }
                 SendUtil.sendMessage(sender, "addhelp");
+                return true;
+            }
+
+            //如果输入/re recent
+            if (args[0].equalsIgnoreCase("recent")) {
+                if (!sender.hasPermission("revive.recent")) {
+                    SendUtil.sendMessage(sender, "nopermission");
+                    return true;
+                }
+                //到最近复活点
+                if (!(sender instanceof Player)) {
+                    return true;
+                }
+                Player player = (Player) sender;
+
+                List<String> list = FileUtil.getSortReviveName(player);
+
+                for (String name : list) {
+                    //如果这个重生点是关闭的 则继续往下循环
+                    if (!FileUtil.isEnableRevive(name)) {
+                        continue;
+                    }
+                    //不是关闭的话
+                    //获取type
+                    ReviveType type = FileUtil.getType(name);
+                    //获取复活点位置
+                    Location loc = FileUtil.getLocation(name);
+
+                    //如果不是特殊复活点
+                    if (type == ReviveType.DEFAULT) {
+                        player.teleport(loc);
+                        return true;
+                    }
+
+                    //如果是特殊复活点的话
+                    if ((type == ReviveType.GROUP && player.hasPermission("revive.point."
+                            + player.getWorld().getName() + "." + name))
+                            || (type == ReviveType.CIRCLE && player.hasPermission("revive.circle."
+                            + player.getWorld().getName() + "." + name))
+                            || (type == ReviveType.DOMAIN && player.hasPermission("revive.domain."
+                            + player.getWorld().getName() + "." + name))) {
+                        player.teleport(loc);
+                        return true;
+                    }
+                }
+                //如果没设置这些复活点...
+                String worldName = player.getWorld().getName();
+                //如果世界复活点存在
+                if (FileUtil.isExists(worldName) && FileUtil.getType(worldName) == ReviveType.WORLD) {
+                    //如果没启动
+                    if (!FileUtil.isEnableRevive(worldName)) {
+                        return true;
+                    }
+                    Location loc = FileUtil.getLocation(worldName);
+                    player.teleport(loc);
+                    return true;
+                }
+
+                //如果全服复活点存在
+                if (FileUtil.isExists("spawn") && FileUtil.getType("spawn") == ReviveType.GLOBAL) {
+                    //没启动的话
+                    if (!FileUtil.isEnableRevive("spawn")) {
+                        return true;
+                    }
+                    Location loc = FileUtil.getLocation("spawn");
+                    player.teleport(loc);
+                    return true;
+                }
                 return true;
             }
 
